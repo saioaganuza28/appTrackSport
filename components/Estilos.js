@@ -34,7 +34,7 @@ export const stylesInicioActividad = StyleSheet.create({
   },
 });
 
-const stylesPerfil = StyleSheet.create({
+export const stylesPerfilUsuario = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
