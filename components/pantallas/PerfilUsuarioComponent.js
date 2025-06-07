@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, Image,
+  Text, TextInput, TouchableOpacity, Image,
   Alert, Keyboard, TouchableWithoutFeedback, ScrollView
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { stylesPerfilUsuario } from '../Estilos';
 import { connect } from 'react-redux';
-import { cargarDatosUsuario, actualizarDatosUsuario } from '../redux/actionCreators';
+import { cargarDatosUsuario, actualizarDatosUsuario } from '../../redux/ActionCreators';
 import { auth } from '../../firebase/firebase';
 
 const mapStateToProps = state => ({
