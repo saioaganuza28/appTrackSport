@@ -5,7 +5,6 @@ import { stylesInicioActividad } from '../Estilos';
 
 class InicioActividad extends Component {
   handleStart = () => {
-    // Aquí puedes añadir la lógica para iniciar la actividad (tracking, navegación, etc.)
     console.log('Actividad iniciada');
   };
 

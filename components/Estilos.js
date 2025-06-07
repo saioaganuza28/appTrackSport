@@ -1,7 +1,11 @@
 import { StyleSheet } from 'react-native';
 
+export var colorPrincipal = '#ae5be1';
+export var colorSecundario = '#fc4e48';
+var black = '#594069';
+
 export const stylesInicioActividad = StyleSheet.create({
-    container: {
+  container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -21,7 +25,7 @@ export const stylesInicioActividad = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#fc4c02', 
+    backgroundColor: colorPrincipal,
     paddingVertical: 20,
     paddingHorizontal: 50,
     borderRadius: 40,
@@ -51,6 +55,7 @@ export const stylesPerfilUsuario = StyleSheet.create({
   editText: {
     color: '#007bff',
     marginBottom: 20,
+    marginLeft: 25,
   },
   input: {
     width: '100%',
@@ -61,9 +66,17 @@ export const stylesPerfilUsuario = StyleSheet.create({
     borderRadius: 8,
   },
   button: {
-    backgroundColor: '#fc4c02',
+    backgroundColor: colorPrincipal,
     paddingVertical: 16,
     paddingHorizontal: 50,
+    borderRadius: 30,
+    marginTop: 20,
+    elevation: 4,
+  },
+  buttonType2: {
+    backgroundColor: black,
+    paddingVertical: 16,
+    paddingHorizontal: 30,
     borderRadius: 30,
     marginTop: 20,
     elevation: 4,
@@ -72,6 +85,11 @@ export const stylesPerfilUsuario = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+    buttonTextType2: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
 });
 

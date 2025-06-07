@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, stylesPerfilUsuarioheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { stylesPerfilUsuario } from '../Estilos';
+import { auth } from '../../firebase/firebase';
 // import storage from '@react-native-firebase/storage';
 // import firestore from '@react-native-firebase/firestore';
 // import auth from '@react-native-firebase/auth';
@@ -21,25 +22,25 @@ const PerfilUsuario = () => {
       { text: 'Cancelar', style: 'cancel' },
     ]);
   };
-  
-const abrirCamara = async () => {
-  const { status } = await ImagePicker.requestCameraPermissionsAsync();
-  if (status !== 'granted') {
-    alert('Permiso para acceder a la cámara denegado');
-    return;
-  }
 
-  const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: false,
-    aspect: [4, 3],
-    quality: 1,
-  });
+  const abrirCamara = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permiso para acceder a la cámara denegado');
+      return;
+    }
 
-  if (!result.canceled && result.assets?.[0]) {
-    setFotoUri(result.assets[0].uri);
-  }
-};
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets?.[0]) {
+      setFotoUri(result.assets[0].uri);
+    }
+  };
   const abrirGaleria = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -52,36 +53,40 @@ const abrirCamara = async () => {
     }
   };
 
-//   const subirDatosAFirebase = async () => {
-//     try {
-//       const userId = auth().currentUser?.uid;
-//       if (!userId) {
-//         Alert.alert('Error', 'Usuario no autenticado');
-//         return;
-//       }
+  const handleLogout = () => {
+    auth.signOut();
+  };
 
-//       let fotoUrl = null;
+  //   const subirDatosAFirebase = async () => {
+  //     try {
+  //       const userId = auth().currentUser?.uid;
+  //       if (!userId) {
+  //         Alert.alert('Error', 'Usuario no autenticado');
+  //         return;
+  //       }
 
-//       if (fotoUri) {
-//         const path = `usuarios/${userId}/perfil.jpg`;
-//         await storage().ref(path).putFile(fotoUri);
-//         fotoUrl = await storage().ref(path).getDownloadURL();
-//       }
+  //       let fotoUrl = null;
 
-//       await firestore().collection('usuarios').doc(userId).set({
-//         nombre,
-//         altura,
-//         peso,
-//         edad,
-//         fotoUrl,
-//       });
+  //       if (fotoUri) {
+  //         const path = `usuarios/${userId}/perfil.jpg`;
+  //         await storage().ref(path).putFile(fotoUri);
+  //         fotoUrl = await storage().ref(path).getDownloadURL();
+  //       }
 
-//       Alert.alert('Éxito', 'Datos guardados correctamente');
-//     } catch (error) {
-//       console.error(error);
-//       Alert.alert('Error', 'No se pudieron guardar los datos');
-//     }
-//   };
+  //       await firestore().collection('usuarios').doc(userId).set({
+  //         nombre,
+  //         altura,
+  //         peso,
+  //         edad,
+  //         fotoUrl,
+  //       });
+
+  //       Alert.alert('Éxito', 'Datos guardados correctamente');
+  //     } catch (error) {
+  //       console.error(error);
+  //       Alert.alert('Error', 'No se pudieron guardar los datos');
+  //     }
+  //   };
 
   return (
     <View style={stylesPerfilUsuario.container}>
@@ -123,6 +128,10 @@ const abrirCamara = async () => {
 
       <TouchableOpacity style={stylesPerfilUsuario.button} onPress={console.log('subirDatosAFirebase')}>
         <Text style={stylesPerfilUsuario.buttonText}>GUARDAR</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={stylesPerfilUsuario.buttonType2} onPress={handleLogout}>
+        <Text style={stylesPerfilUsuario.buttonTextType2}>Cerrar Sesión</Text>
       </TouchableOpacity>
     </View>
   );

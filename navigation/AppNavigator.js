@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import InicioActividad from '../components/pantallas/InicioActividadComponent';
 import PerfilUsuario from '../components/pantallas/PerfilUsuarioComponent';
+import { colorPrincipal } from '../components/Estilos';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,7 +13,7 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarStyle: { backgroundColor: '#fc4c02' },
+          tabBarStyle: { backgroundColor: colorPrincipal },
           tabBarActiveTintColor: '#FFFFFF',
           tabBarInactiveTintColor: '#000000',
           tabBarIcon: ({ color, size }) => {
