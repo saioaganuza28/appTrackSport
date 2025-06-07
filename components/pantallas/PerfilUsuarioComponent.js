@@ -1,114 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+import React, { Component } from 'react';
+import {
+  View, Text, TextInput, TouchableOpacity, Image,
+  Alert, Keyboard, TouchableWithoutFeedback, ScrollView
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { stylesPerfilUsuario } from '../Estilos';
+import { connect } from 'react-redux';
+import { cargarDatosUsuario, actualizarDatosUsuario } from '../redux/actionCreators';
 import { auth } from '../../firebase/firebase';
-import { getDatabase, ref, set, get, child } from 'firebase/database';
-import { Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 
+const mapStateToProps = state => ({
+  datos: state.user.datos,
+  isLoading: state.user.isLoading,
+  errMess: state.user.errMess
+});
 
-const PerfilUsuario = () => {
-  const [nombre, setNombre] = useState('');
-  const [altura, setAltura] = useState('');
-  const [peso, setPeso] = useState('');
-  const [edad, setEdad] = useState('');
-  const [fotoUri, setFotoUri] = useState(null);
+const mapDispatchToProps = {
+  cargarDatosUsuario,
+  actualizarDatosUsuario
+};
 
-  const db = getDatabase();
-  const userId = auth.currentUser?.uid;
+class PerfilUsuario extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nombre: '',
+      altura: '',
+      peso: '',
+      edad: '',
+      fotoUri: null
+    };
+  }
 
-  useEffect(() => {
-    if (userId) {
-      const userRef = ref(db, `usuarios/${userId}`);
-      get(userRef)
-        .then(snapshot => {
-          if (snapshot.exists()) {
-            const datos = snapshot.val();
-            setNombre(datos.nombre || '');
-            setAltura(datos.altura || '');
-            setPeso(datos.peso || '');
-            setEdad(datos.edad || '');
-            setFotoUri(datos.fotoUri || null);
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          Alert.alert('Error', 'No se pudieron cargar los datos');
-        });
+  componentDidMount() {
+    this.props.cargarDatosUsuario();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.datos !== this.props.datos) {
+      const { nombre, altura, peso, edad, fotoUri } = this.props.datos;
+      this.setState({ nombre, altura, peso, edad, fotoUri });
     }
-  }, [userId]);
+  }
 
-  const seleccionarFoto = () => {
+  seleccionarFoto = () => {
     Alert.alert('Selecciona una opción', '', [
-      { text: 'Cámara', onPress: abrirCamara },
-      { text: 'Galería', onPress: abrirGaleria },
+      { text: 'Cámara', onPress: this.abrirCamara },
+      { text: 'Galería', onPress: this.abrirGaleria },
       { text: 'Cancelar', style: 'cancel' },
     ]);
   };
 
-  const abrirCamara = async () => {
+  abrirCamara = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       alert('Permiso para acceder a la cámara denegado');
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
+    const result = await ImagePicker.launchCameraAsync({ quality: 1 });
     if (!result.canceled && result.assets?.[0]) {
-      setFotoUri(result.assets[0].uri);
+      this.setState({ fotoUri: result.assets[0].uri });
     }
   };
 
-  const abrirGaleria = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  abrirGaleria = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({ quality: 1 });
     if (!result.canceled && result.assets?.[0]) {
-      setFotoUri(result.assets[0].uri);
+      this.setState({ fotoUri: result.assets[0].uri });
     }
   };
 
-  const subirDatosAFirebase = async () => {
-    if (!userId) {
-      Alert.alert('Error', 'Usuario no autenticado');
-      return;
-    }
-
-    try {
-      await set(ref(db, 'usuarios/' + userId), {
-        nombre,
-        altura,
-        peso,
-        edad,
-        fotoUri,
-      });
-      Alert.alert('Éxito', 'Datos guardados correctamente');
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'No se pudieron guardar los datos');
-    }
+  guardarDatos = () => {
+    const { nombre, altura, peso, edad, fotoUri } = this.state;
+    this.props.actualizarDatosUsuario({ nombre, altura, peso, edad, fotoUri });
+    Alert.alert('Éxito', 'Datos guardados correctamente');
   };
 
-  const handleLogout = () => {
+  handleLogout = () => {
     auth.signOut();
   };
 
-  return (
+  render() {
+    const { nombre, altura, peso, edad, fotoUri } = this.state;
+
+    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          contentContainerStyle={stylesPerfilUsuario.container}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TouchableOpacity onPress={seleccionarFoto}>
+        <ScrollView contentContainerStyle={stylesPerfilUsuario.container} keyboardShouldPersistTaps="handled">
+          <TouchableOpacity onPress={this.seleccionarFoto}>
             <Image
               source={fotoUri ? { uri: fotoUri } : require('./imagenes/avatar-placeholder.png')}
               style={stylesPerfilUsuario.avatar}
@@ -119,41 +98,42 @@ const PerfilUsuario = () => {
           <TextInput
             placeholder="Nombre de usuario"
             value={nombre}
-            onChangeText={setNombre}
+            onChangeText={text => this.setState({ nombre: text })}
             style={stylesPerfilUsuario.input}
           />
           <TextInput
             placeholder="Altura (cm)"
             value={altura}
-            onChangeText={setAltura}
+            onChangeText={text => this.setState({ altura: text })}
             keyboardType="numeric"
             style={stylesPerfilUsuario.input}
           />
           <TextInput
             placeholder="Peso (kg)"
             value={peso}
-            onChangeText={setPeso}
+            onChangeText={text => this.setState({ peso: text })}
             keyboardType="numeric"
             style={stylesPerfilUsuario.input}
           />
           <TextInput
             placeholder="Edad"
             value={edad}
-            onChangeText={setEdad}
+            onChangeText={text => this.setState({ edad: text })}
             keyboardType="numeric"
             style={stylesPerfilUsuario.input}
           />
 
-          <TouchableOpacity style={stylesPerfilUsuario.button} onPress={subirDatosAFirebase}>
+          <TouchableOpacity style={stylesPerfilUsuario.button} onPress={this.guardarDatos}>
             <Text style={stylesPerfilUsuario.buttonText}>GUARDAR</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={stylesPerfilUsuario.buttonType2} onPress={handleLogout}>
+          <TouchableOpacity style={stylesPerfilUsuario.buttonType2} onPress={this.handleLogout}>
             <Text style={stylesPerfilUsuario.buttonTextType2}>Cerrar Sesión</Text>
           </TouchableOpacity>
         </ScrollView>
       </TouchableWithoutFeedback>
-  );
-};
+    );
+  }
+}
 
-export default PerfilUsuario;
+export default connect(mapStateToProps, mapDispatchToProps)(PerfilUsuario);

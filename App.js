@@ -5,6 +5,9 @@ import LoginComponent from './components/pantallas/LoginComponent';
 import AppNavigator from './navigation/AppNavigator';
 import { View, ActivityIndicator } from 'react-native';
 import { colorPrincipal } from './components/Estilos';
+import { Provider } from 'react-redux';
+import { ConfigureStore } from './redux/configureStore';
+const store = ConfigureStore();
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -26,5 +29,9 @@ export default function App() {
     );
   }
 
-  return user ? <AppNavigator /> : <LoginComponent />;
+  return (
+    <Provider store={store}>
+      {user ? (<AppNavigator />) : (<LoginComponent />)}
+    </Provider>
+  );
 }
