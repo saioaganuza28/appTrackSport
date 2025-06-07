@@ -4,6 +4,7 @@ import { auth } from './firebase/firebase';
 import LoginComponent from './components/pantallas/LoginComponent';
 import AppNavigator from './navigation/AppNavigator';
 import { View, ActivityIndicator } from 'react-native';
+import { colorPrincipal } from './components/Estilos';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -20,7 +21,7 @@ export default function App() {
   if (checkingAuth) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#fc4c02" />
+        <ActivityIndicator size="large" color={colorPrincipal} />
       </View>
     );
   }
