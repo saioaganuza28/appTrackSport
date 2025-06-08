@@ -46,7 +46,6 @@ export const actualizarDatosUsuario = (nombre, altura, peso, edad, fotoUri) => a
 
 export const guardarActividad = (actividad) => async dispatch => {
   dispatch({ type: ActionTypes.GUARDAR_ACTIVIDAD });
-console.log('llega aqui')
 
   try {
 
