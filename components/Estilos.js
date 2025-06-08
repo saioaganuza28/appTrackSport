@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export var colorPrincipal = '#ae5be1';
-export var colorSecundario = '#fc4e48';
 var black = '#594069';
 
 export const stylesInicioActividad = StyleSheet.create({
@@ -86,10 +85,47 @@ export const stylesPerfilUsuario = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-    buttonTextType2: {
+  buttonTextType2: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 12,
   },
 });
 
+export const stylesMapa = StyleSheet.create({
+  mapa: {
+    width: '100%',
+    height: 300,
+    marginVertical: 20,
+  },
+});
+
+export const stylesModal = StyleSheet.create({
+  modalFondo: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContenido: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalBotonPrincipal: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 8,
+    marginHorizontal: 10,
+    backgroundColor: colorPrincipal
+  },
+    modalBotonSecundario: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 8,
+    marginHorizontal: 10,
+    backgroundColor: black
+  },
+});

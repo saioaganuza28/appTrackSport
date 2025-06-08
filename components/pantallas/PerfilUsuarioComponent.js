@@ -76,6 +76,7 @@ class PerfilUsuario extends Component {
   guardarDatos = () => {
     const { nombre, altura, peso, edad, fotoUri } = this.state;
     this.props.actualizarDatosUsuario(nombre, altura, peso, edad, fotoUri);
+    Alert.alert('Éxito', 'Datos guardados correctamente');
   };
 
   handleLogout = () => {

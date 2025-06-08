@@ -1,6 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 
-import { getDatabase, ref, get, set } from 'firebase/database';
+import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { auth } from '../firebase/firebase';
 
 
@@ -33,7 +33,7 @@ export const actualizarDatosUsuario = (nombre, altura, peso, edad, fotoUri) => a
     edad,
     fotoUri
   };
-  console.log(nombre);
+
   try {
     const userId = auth.currentUser?.uid;
     const db = getDatabase();
@@ -41,5 +41,27 @@ export const actualizarDatosUsuario = (nombre, altura, peso, edad, fotoUri) => a
     dispatch({ type: ActionTypes.ACTUALIZAR_DATOS_USUARIO_EXITO, payload: datos });
   } catch (error) {
     dispatch({ type: ActionTypes.ACTUALIZAR_DATOS_USUARIO_ERROR, payload: error.message });
+  }
+};
+
+export const guardarActividad = (actividad) => async dispatch => {
+  dispatch({ type: ActionTypes.GUARDAR_ACTIVIDAD });
+console.log('llega aqui')
+
+  try {
+
+    const userId = auth.currentUser?.uid;
+    const db = getDatabase();
+    await push(ref(db, `actividades/${userId}`), actividad);
+
+    dispatch({
+      type: ActionTypes.GUARDAR_ACTIVIDAD_EXITO,
+      payload: { id: nuevaRef.key, ...actividad },
+    });
+  } catch (error) {
+    dispatch({
+      type: ActionTypes.GUARDAR_ACTIVIDAD_ERROR,
+      payload: error.message,
+    });
   }
 };
