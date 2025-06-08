@@ -1,4 +1,4 @@
-import * as ActionTypes  from './ActionTypes';
+import * as ActionTypes from './ActionTypes';
 
 import { getDatabase, ref, get, set } from 'firebase/database';
 import { auth } from '../firebase/firebase';
@@ -6,7 +6,6 @@ import { auth } from '../firebase/firebase';
 
 export const cargarDatosUsuario = () => async dispatch => {
   dispatch({ type: ActionTypes.CARGAR_DATOS_USUARIO });
-
   try {
     const userId = auth.currentUser?.uid;
     const db = getDatabase();
@@ -24,16 +23,23 @@ export const cargarDatosUsuario = () => async dispatch => {
 };
 
 
-export const actualizarDatosUsuario = (datos) => async dispatch => {
-  dispatch({ type: ACTUALIZAR_DATOS_USUARIO });
+export const actualizarDatosUsuario = (nombre, altura, peso, edad, fotoUri) => async dispatch => {
 
+  dispatch({ type: ActionTypes.ACTUALIZAR_DATOS_USUARIO });
+  const datos = {
+    nombre,
+    altura,
+    peso,
+    edad,
+    fotoUri
+  };
+  console.log(nombre);
   try {
     const userId = auth.currentUser?.uid;
     const db = getDatabase();
     await set(ref(db, `usuarios/${userId}`), datos);
-
-    dispatch({ type: ACTUALIZAR_DATOS_USUARIO_EXITO, payload: datos });
+    dispatch({ type: ActionTypes.ACTUALIZAR_DATOS_USUARIO_EXITO, payload: datos });
   } catch (error) {
-    dispatch({ type: ACTUALIZAR_DATOS_USUARIO_ERROR, payload: error.message });
+    dispatch({ type: ActionTypes.ACTUALIZAR_DATOS_USUARIO_ERROR, payload: error.message });
   }
 };

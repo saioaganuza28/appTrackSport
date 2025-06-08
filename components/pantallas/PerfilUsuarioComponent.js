@@ -9,16 +9,18 @@ import { connect } from 'react-redux';
 import { cargarDatosUsuario, actualizarDatosUsuario } from '../../redux/ActionCreators';
 import { auth } from '../../firebase/firebase';
 
-const mapStateToProps = state => ({
-  datos: state.user.datos,
-  isLoading: state.user.isLoading,
-  errMess: state.user.errMess
-});
+const mapStateToProps = state => {
+  return {
+    datos: state.user.datos,
+    isLoading: state.user.isLoading,
+    errMess: state.user.errMess
+  }
+}
 
-const mapDispatchToProps = {
-  cargarDatosUsuario,
-  actualizarDatosUsuario
-};
+const mapDispatchToProps = dispatch => ({
+  cargarDatosUsuario: () => dispatch(cargarDatosUsuario()),
+  actualizarDatosUsuario: (nombre, altura, peso, edad, fotoUri) => dispatch(actualizarDatosUsuario(nombre, altura, peso, edad, fotoUri))
+});
 
 class PerfilUsuario extends Component {
   constructor(props) {
@@ -73,8 +75,7 @@ class PerfilUsuario extends Component {
 
   guardarDatos = () => {
     const { nombre, altura, peso, edad, fotoUri } = this.state;
-    this.props.actualizarDatosUsuario({ nombre, altura, peso, edad, fotoUri });
-    Alert.alert('Éxito', 'Datos guardados correctamente');
+    this.props.actualizarDatosUsuario(nombre, altura, peso, edad, fotoUri);
   };
 
   handleLogout = () => {
