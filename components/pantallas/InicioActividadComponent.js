@@ -28,7 +28,7 @@ class InicioActividad extends Component {
     watchId: null,
     region: null,
     intervalId: null,
-    mostrarModal: false,  
+    mostrarModal: false,
   };
 
   iniciarActividad = async () => {
@@ -57,7 +57,16 @@ class InicioActividad extends Component {
   };
 
   detenerActividad = () => {
-    this.setState({ mostrarModal: true });
+    const { watchId, intervalId } = this.state;
+
+    if (watchId) watchId.remove();
+    if (intervalId) clearInterval(intervalId);
+
+    this.setState({
+      watchId: null,
+      intervalId: null,
+      mostrarModal: true
+    });
   };
 
   confirmarGuardar = () => {
