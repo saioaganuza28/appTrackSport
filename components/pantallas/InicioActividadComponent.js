@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Alert,
   Modal,
 } from 'react-native';
@@ -172,7 +171,7 @@ class InicioActividad extends Component {
     return (
       <View style={stylesInicioActividad.container}>
         <Text style={stylesInicioActividad.title}>
-          {tracking ? 'Actividad en curso' : 'Listo para comenzar'}
+          {tracking ? 'Actividad en curso' : 'List@ para comenzar'}
         </Text>
         <Text style={stylesInicioActividad.subtitle}>
           {tracking

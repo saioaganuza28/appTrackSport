@@ -64,3 +64,23 @@ export const guardarActividad = (actividad) => async dispatch => {
     });
   }
 };
+
+export const cargarActividades = () => async dispatch => {
+
+  dispatch({ type: ActionTypes.CARGAR_ACTIVIDADES });
+  try {
+    const userId = auth.currentUser?.uid;
+    const db = getDatabase();
+    const userRef = ref(db, `actividades/${userId}`);
+    const snapshot = await get(userRef);
+
+
+    if (snapshot.exists()) {
+      dispatch({ type: ActionTypes.CARGAR_ACTIVIDADES_EXITO, payload: snapshot.val() });
+    } else {
+      dispatch({ type: ActionTypes.CARGAR_ACTIVIDADES_EXITO, payload: {} });
+    }
+  } catch (error) {
+    dispatch({ type: ActionTypes.CARGAR_ACTIVIDADES_ERROR, payload: error.message });
+  }
+};
