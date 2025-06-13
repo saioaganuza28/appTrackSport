@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes';
-
 import { getDatabase, ref, get, set, push } from 'firebase/database';
 import { auth } from '../firebase/firebase';
 
@@ -73,7 +72,6 @@ export const cargarActividades = () => async dispatch => {
     const db = getDatabase();
     const userRef = ref(db, `actividades/${userId}`);
     const snapshot = await get(userRef);
-
 
     if (snapshot.exists()) {
       dispatch({ type: ActionTypes.CARGAR_ACTIVIDADES_EXITO, payload: snapshot.val() });

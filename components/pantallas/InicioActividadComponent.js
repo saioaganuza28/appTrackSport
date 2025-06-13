@@ -82,8 +82,7 @@ class InicioActividad extends Component {
       distancia,
       promedio,
       recorrido: locations,
-      timestamp: new Date().toISOString(),
-      uid: auth.currentUser?.uid,
+      timestamp: new Date().toISOString()
     };
 
     this.props.guardarActividad(actividad);
