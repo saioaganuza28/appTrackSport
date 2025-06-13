@@ -11,7 +11,6 @@ import * as Location from 'expo-location';
 import { connect } from 'react-redux';
 import { guardarActividad } from '../../redux/ActionCreators';
 import { stylesInicioActividad, stylesModal, stylesMapa } from '../Estilos';
-import { auth } from '../../firebase/firebase';
 
 const mapStateToProps = state => ({});
 
